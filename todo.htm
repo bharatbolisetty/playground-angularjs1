@@ -1,0 +1,82 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  </head>
+<body ng-app="TodoApp">
+<div ng-controller="TodoCtrl" class="container">
+  <h1>TODO List</h1>
+  <br>
+  <div class="row">
+	<div class="col-md-1">
+		<input type="checkbox" ng-model="selectAll" ng-click="toggleSelect()"/>
+	</div>
+	<div class="col-md-1">
+		<button class="btn btn-danger" ng-click="deleteTodo()">Delete</button>
+	</div>
+	<div class="col-md-1">
+		<button ng-click="addItemForm()" class="btn btn-info">New TODO</button>
+	</div>
+  </div>
+  <br>
+  <div class="row" ng-show="showAddForm">
+	<div class="col-md-6">
+		<input type="text" place-holder="Enter your todo here" ng-model="todoText"/>
+		<button class="btn btn-success" ng-click="addItem()">Add</button>
+	</div>
+  </div>
+  <div class="row" ng-repeat="todo in todos">
+	<div class="col-md-1">
+		<input type="checkbox" ng-model="todo.checked" ng-click="resetAll()"/>
+	</div>
+	<div class="col-md-6">
+		<label>{{todo.text}}</label>
+	</div>
+  </div>
+</div>
+<script>
+var todoApp = angular.module('TodoApp', []);
+
+todoApp.controller('TodoCtrl', function ($scope) {
+	$scope.todos = [];
+	$scope.showAddForm = false;
+	
+	$scope.addItemForm = function(){
+		$scope.showAddForm = true;		
+	}
+
+	$scope.addItem = function(){
+		$scope.todos.push({
+			"text": $scope.todoText,
+			"checked": false
+		});
+		$scope.showAddForm = false;
+		$scope.todoText = '';
+	}
+
+	$scope.toggleSelect = function(){
+		for(var i in $scope.todos){
+			$scope.todos[i].checked = $scope.selectAll;
+		}
+	}
+
+	$scope.resetAll = function(){
+		$scope.selectAll = false;
+	}
+
+	$scope.deleteTodo = function(){
+		$scope.todos = $scope.todos.filter(function(todo){
+			return !todo.checked;
+		});
+		$scope.resetAll();
+	}
+
+});
+
+</script>
+</body>
+</html>
